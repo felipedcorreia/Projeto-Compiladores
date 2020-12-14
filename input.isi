@@ -1,27 +1,28 @@
 programa
 
-numero a,b,c,d;
-texto t1;
+  numero a, b;
+  texto  t1;
+  numero c;
+  c = 10;
 
-leia (a);
+  leia(a);
+  leia(b);
 
-leia (t1);
+  a = 1 + 2 * 3 / b;
 
-leia (b);
-
-se (a > t1)
-{
-  c = a + b ;
-}
-senao
-{
- c = a - b;
-}
-
-escreva (c);
-
-d = a + c * a + b / b;
-
-escreva (d);
+  se ( a > b )
+  {
+     escreva (a);
+  }
+  senao
+  {
+     escreva (b);
+  }
+   
+  enquanto (c > 0)
+  {
+    c = c - 1;
+    escreva(c);
+  }
 
 fimprog;
