@@ -65,7 +65,8 @@ declaravar :  tipo ID  {
 	                  _varValue = null;
 	                  symbol = new IsiVariable(_varName, _tipo, _varValue);
 	                  if (!symbolTable.exists(_varName)){
-	                     symbolTable.add(symbol);	
+	                     System.out.println("[DEBUG][ADDSB] " + symbol);
+	                     symbolTable.add(symbol);
 	                  }
 	                  else{
 	                  	 throw new IsiSemanticException("Symbol "+_varName+" already declared");
@@ -117,6 +118,7 @@ cmdleitura	: 'leia' AP
                      
               {
               	IsiVariable var = (IsiVariable)symbolTable.get(_readID);
+              	System.out.println("[DEBUG][READ ] leia(" + _readID + ")");
               	CommandLeitura cmd = new CommandLeitura(_readID, var);
               	stack.peek().add(cmd);
               }   
@@ -130,6 +132,7 @@ cmdescrita	: 'escreva'
                  FP 
                  SC
                {
+                  System.out.println("[DEBUG][WRITE] escreva(" + _writeID + ")");
                	  CommandEscrita cmd = new CommandEscrita(_writeID);
                	  stack.peek().add(cmd);
                }
@@ -137,11 +140,19 @@ cmdescrita	: 'escreva'
 			
 cmdattrib	:  ID { verificaID(_input.LT(-1).getText());
                     _exprID = _input.LT(-1).getText();
+
+                    // guarda o tipo da variàvel à esquerda da atribuição
+                    {
+                      IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                      _tipo = var.getType();
+                    }
+
                    } 
                ATTR { _exprContent = ""; } 
                expr 
                SC
                {
+                 System.out.println("[DEBUG][ATRIB] " + _exprID + " = " + _exprContent);
                	 CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
                	 stack.peek().add(cmd);
                }
@@ -173,6 +184,7 @@ cmdselecao  :  'se' AP
                    	FCH
                    	{
                    		listaFalse = stack.pop();
+                   		System.out.println("[DEBUG][SELEC] " + _exprDecision + " ? " + listaTrue + " : " + listaFalse);
                    		CommandDecisao cmd = new CommandDecisao(_exprDecision, listaTrue, listaFalse);
                    		stack.peek().add(cmd);
                    	}
@@ -188,7 +200,21 @@ expr		:  termo (
 			
 termo		: ID { verificaID(_input.LT(-1).getText());
 	               _exprContent += _input.LT(-1).getText();
-                 } 
+
+	              // verifica se tipos são diferentes
+                {
+                   IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                   int proximoTipo = var.getType();
+                   if(_tipo != proximoTipo)
+                   {
+                     if(_tipo == 0)
+                       throw new IsiSemanticException("Incompatible types: TEXTO cannot be converted to NUMERO");
+                     else
+                       throw new IsiSemanticException("Incompatible types: NUMERO cannot be converted to TEXTO");
+                   }
+                 }
+
+               }
             | 
               NUMBER
               {

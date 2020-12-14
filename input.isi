@@ -1,23 +1,29 @@
 programa
 
-  declara  t1;
-  numero a, b;
-  texto  t;
-  
+numero a,b,c,d;
+texto t1;
 
-  leia(a);
-  leia(b);
-  
-  a = 1 + 2 * 3 / b;
-  
+leia (a);
 
-  se ( a > b ) {
-     escreva (a);
-  }
-  senao {
-     escreva (b);
-  }
-  
-  
+leia (t1);
+
+leia (b);
+
+c = a + t1;
+
+se (a<c)
+{
+  c = a + b ;
+}
+senao
+{
+ c = a - b;
+}
+
+escreva (c);
+
+d = a + c * a + b / b;
+
+escreva (d);
 
 fimprog;
