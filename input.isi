@@ -1,3 +1,23 @@
-abc + 123 * 456 / 12.0 
-- 30 + 45.23 / 18 -
-123546 * abcdefg xy
+programa
+
+  declara  t1;
+  numero a, b;
+  texto  t;
+  
+
+  leia(a);
+  leia(b);
+  
+  a = 1 + 2 * 3 / b;
+  
+
+  se ( a > b ) {
+     escreva (a);
+  }
+  senao {
+     escreva (b);
+  }
+  
+  
+
+fimprog;
