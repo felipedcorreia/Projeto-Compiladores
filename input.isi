@@ -1,7 +1,9 @@
 programa
 
-numero a,b,c,d;
+numero a,b,d;
 texto t1;
+numero c;
+c = 10;
 
 leia (a);
 
@@ -23,5 +25,11 @@ escreva (c);
 d = a + c * a + b / b;
 
 escreva (d);
+
+enquanto (c > 0)
+  {
+    c = c - 1;
+    escreva(c);
+  }
 
 fimprog;

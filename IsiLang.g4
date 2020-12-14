@@ -11,6 +11,7 @@ grammar IsiLang;
 	import br.com.professorisidro.isilanguage.ast.CommandEscrita;
 	import br.com.professorisidro.isilanguage.ast.CommandAtribuicao;
 	import br.com.professorisidro.isilanguage.ast.CommandDecisao;
+	import br.com.professorisidro.isilanguage.ast.CommandRepeticao; 
 	import java.util.ArrayList;
 	import java.util.Stack;
 }
@@ -29,12 +30,14 @@ grammar IsiLang;
 	private String _exprID;
 	private String _exprContent;
 	private String _exprDecision;
+	private String _exprRepetition; 
 	private ArrayList<AbstractCommand> listaTrue;
 	private ArrayList<AbstractCommand> listaFalse;
+	private ArrayList<AbstractCommand> listaWhile;
 	
 	public void verificaID(String id){
 		if (!symbolTable.exists(id)){
-			throw new IsiSemanticException("Symbol "+id+" not declared 123");
+			throw new IsiSemanticException("Symbol "+id+" not declared");
 		}
 	}
 	
@@ -215,6 +218,25 @@ cmdselecao  :  'se' AP
                    	}
                    )?
             ;
+
+cmdrepeticao  :  'enquanto'
+				  AP
+				  ID  { _exprRepetition = _input.LT(-1).getText(); }
+				  OPREL  { _exprRepetition += _input.LT(-1).getText(); }
+				  (ID | NUMBER)  { _exprRepetition += _input.LT(-1).getText(); }
+				  FP
+				  ACH
+				  { curThread = new ArrayList<AbstractCommand>(); 
+                    stack.push(curThread);
+                  }
+				  (cmd)+
+				  FCH
+				  {
+				  	listaWhile = stack.pop();
+				 	CommandRepeticao cmd = new CommandRepeticao(_exprRepetition, listaWhile);
+				 	stack.peek().add(cmd);
+				  }
+              ;
             
 			
 expr		:  termo ( 
