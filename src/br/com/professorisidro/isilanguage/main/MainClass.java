@@ -7,10 +7,10 @@ import br.com.professorisidro.isilanguage.exceptions.IsiSemanticException;
 import br.com.professorisidro.isilanguage.parser.IsiLangLexer;
 import br.com.professorisidro.isilanguage.parser.IsiLangParser;
 
-/* esta √© a classe que √© respons√°vel por criar a intera√ß√£o com o usu√°rio
+/* esta È a classe que È respons·vel por criar a interaÁ„o com o usu·rio
  * instanciando nosso parser e apontando para o arquivo fonte
  * 
- * Arquivo fonte: extensao .isi
+ * Arquivo fonte: extens„o .isi
  * 
  */
 public class MainClass {
@@ -19,10 +19,10 @@ public class MainClass {
 			IsiLangLexer lexer;
 			IsiLangParser parser;
 			
-			// leio o arquivo "input.isi" e isso √© entrada para o Analisador Lexico
+			// leio o arquivo "input.isi" e isso È entrada para o analisador lÈxico
 			lexer = new IsiLangLexer(CharStreams.fromFileName("input.isi"));
 			
-			// crio um "fluxo de tokens" para passar para o PARSER
+			// crio um "fluxo de tokens" para passar para o parser
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 			
 			// crio meu parser a partir desse tokenStream
