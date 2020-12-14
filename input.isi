@@ -9,9 +9,7 @@ leia (t1);
 
 leia (b);
 
-c = a + t1;
-
-se (a<c)
+se (a > t1)
 {
   c = a + b ;
 }
