@@ -135,9 +135,17 @@ cmdescrita	: 'escreva'
                  }
 			;
 			
-cmdattrib	:  ID { verificaID(_input.LT(-1).getText());
-                    _exprID = _input.LT(-1).getText();
-                   } 
+cmdattrib	:  ID {
+                  verificaID(_input.LT(-1).getText());
+                  _exprID = _input.LT(-1).getText();
+
+                  // guarda o tipo da variàvel à esquerda da atribuição
+                  {
+                    IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                    _tipo = var.getType();
+                  }
+
+                }
                ATTR { _exprContent = ""; } 
                expr 
                SC
@@ -231,9 +239,24 @@ expr		:  termo (
 	            )*
 			;
 			
-termo		: ID { verificaID(_input.LT(-1).getText());
-	               _exprContent += _input.LT(-1).getText();
-                 } 
+termo		: ID {
+                verificaID(_input.LT(-1).getText());
+                _exprContent += _input.LT(-1).getText();
+
+                // verifica se tipos são diferentes
+                {
+                   IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                   int proximoTipo = var.getType();
+                   if(_tipo != proximoTipo)
+                   {
+                     if(_tipo == 0)
+                       throw new IsiSemanticException("Incompatible types: TEXTO cannot be converted to NUMERO");
+                     else
+                       throw new IsiSemanticException("Incompatible types: NUMERO cannot be converted to TEXTO");
+                   }
+                 }
+
+             }
             | 
               NUMBER
               {
