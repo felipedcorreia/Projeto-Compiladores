@@ -149,9 +149,35 @@ cmdattrib	:  ID { verificaID(_input.LT(-1).getText());
 			
 			
 cmdselecao  :  'se' AP
-                    ID    { _exprDecision = _input.LT(-1).getText(); }
+                    ID    {
+                            _exprDecision = _input.LT(-1).getText();
+
+                            // guarda o tipo da variàvel à esquerda do operador relacional
+                            {
+                              IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                              _tipo = var.getType();
+                            }
+
+                          }
                     OPREL { _exprDecision += _input.LT(-1).getText(); }
-                    (ID | NUMBER) {_exprDecision += _input.LT(-1).getText(); }
+                    (ID | NUMBER)
+                          {
+                            _exprDecision += _input.LT(-1).getText();
+
+                            // verifica se tipos são diferentes
+                            {
+                              IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                              int proximoTipo = var.getType();
+                              if(_tipo != proximoTipo)
+                              {
+                                if(_tipo == 0)
+                                  throw new IsiSemanticException("Incompatible types: Bad operand types for binary operator ( " + _exprDecision + " -> first type: NUMERO | second type: TEXTO )");
+                                else
+                                  throw new IsiSemanticException("Incompatible types: Bad operand types for binary operator ( " + _exprDecision + " -> first type: TEXTO | second type: NUMERO )");
+                              }
+                            }
+
+                          }
                     FP 
                     ACH 
                     { curThread = new ArrayList<AbstractCommand>(); 
