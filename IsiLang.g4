@@ -117,6 +117,7 @@ cmdleitura	: 'leia' AP
                      
               {
               	IsiVariable var = (IsiVariable)symbolTable.get(_readID);
+              	var.setAttrib(1);
               	CommandLeitura cmd = new CommandLeitura(_readID, var);
               	stack.peek().add(cmd);
               }   
@@ -142,6 +143,7 @@ cmdattrib	:  ID {
                   // guarda o tipo da variàvel à esquerda da atribuição
                   {
                     IsiVariable var = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                    var.setAttrib(1);
                     _tipo = var.getType();
                   }
 
@@ -255,6 +257,10 @@ termo		: ID {
                        throw new IsiSemanticException("Incompatible types: NUMERO cannot be converted to TEXTO");
                    }
                  }
+
+                 IsiVariable varAux = (IsiVariable)symbolTable.get(_input.LT(-1).getText());
+                 if(varAux.getAttrib() == 0)
+                   throw new IsiSemanticException("Variable " + _input.LT(-1).getText() + " not initialized");
 
              }
             | 
